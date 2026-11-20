@@ -1,0 +1,60 @@
+# RentWorx Client
+
+Next.js App Router frontend for the RentWorx Equipment Rental Platform.
+
+## Purpose
+
+RentWorx lets equipment owners list equipment for rent and lets customers browse, reserve, pay for, and manage rentals through a secure marketplace with customer, owner, and admin dashboards.
+
+## Live URL
+
+`https://<vercel-app>.vercel.app` _(add after deployment)_
+
+## Key features
+
+- Email/password registration and login with BetterAuth
+- Google social login with default `customer` role
+- JWT-backed session handling for the Express API
+- Public home, all equipment, and equipment details pages
+- Server-side search, filtering, sorting, and pagination
+- Favorites saved in MongoDB
+- Stripe Checkout booking flow
+- Customer, owner, and admin dashboards with charts
+- Dark/light theme persisted with localStorage
+- Responsive Shadcn UI with Framer Motion animations
+
+## npm packages
+
+- `next`, `react`, `react-dom`
+- `better-auth`, `@better-auth/mongo-adapter`, `mongodb`
+- `tailwindcss`, `@tailwindcss/postcss`, `tw-animate-css`
+- `framer-motion`, `lucide-react`, `next-themes`, `sonner`
+- `react-hook-form`, `zod`, `axios`
+- `recharts`
+- `class-variance-authority`, `clsx`, `tailwind-merge`, `@radix-ui/react-slot`
+- TypeScript and `@types/*`
+
+## Setup
+
+```bash
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+Open <http://localhost:3000>.
+
+## Scripts
+
+```bash
+npm run dev        # start development server
+npm run build      # production build
+npm run start      # serve production build
+npm run typecheck  # TypeScript check
+```
+
+## Environment
+
+See [`.env.example`](./.env.example). Only `NEXT_PUBLIC_*` values are exposed to the browser. MongoDB, Google OAuth, and BetterAuth secrets stay server-side.
+
+See also [API_CONTRACT.md](./API_CONTRACT.md).
