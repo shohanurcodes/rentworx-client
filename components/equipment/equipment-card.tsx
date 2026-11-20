@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
 
+import { FavoriteButton } from "@/components/equipment/favorite-button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { FeaturedEquipment } from "@/lib/types";
@@ -12,9 +13,13 @@ function rentalLabel(rentalType: FeaturedEquipment["rentalType"]) {
 
 export function EquipmentCard({ item }: { item: FeaturedEquipment }) {
   return (
-    <Card className="group h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <Link href={`/equipment/${item.id}`} className="block h-full">
-        <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
+    <Card className="group relative h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
+        <Link
+          href={`/equipment/${item.id}`}
+          className="absolute inset-0 block"
+          aria-label={`View ${item.name}`}
+        >
           <Image
             src={item.image}
             alt={item.name}
@@ -22,14 +27,20 @@ export function EquipmentCard({ item }: { item: FeaturedEquipment }) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-            <Badge variant="accent" className="shadow-sm">
-              {item.condition}
-            </Badge>
-          </div>
+        </Link>
+        <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
+          <Badge variant="accent" className="shadow-sm">
+            {item.condition}
+          </Badge>
         </div>
+        <FavoriteButton
+          equipmentId={item.id}
+          className="absolute right-3 top-3 z-10"
+        />
+      </div>
 
-        <CardContent className="space-y-3 p-5">
+      <CardContent className="p-5">
+        <Link href={`/equipment/${item.id}`} className="block">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-primary">
@@ -45,12 +56,12 @@ export function EquipmentCard({ item }: { item: FeaturedEquipment }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+          <div className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
             <MapPin className="size-4 shrink-0" />
             <span className="line-clamp-1">{item.location}</span>
           </div>
 
-          <div className="flex items-end justify-between gap-3 border-t border-border pt-4">
+          <div className="mt-4 flex items-end justify-between gap-3 border-t border-border pt-4">
             <p className="text-xl font-bold text-foreground">
               ${item.price.toLocaleString()}
               <span className="ml-1 text-xs font-medium text-muted-foreground">
@@ -61,8 +72,8 @@ export function EquipmentCard({ item }: { item: FeaturedEquipment }) {
               {item.reviewCount} reviews
             </span>
           </div>
-        </CardContent>
-      </Link>
+        </Link>
+      </CardContent>
     </Card>
   );
 }
