@@ -19,3 +19,24 @@ export type ApiMeta = {
   total?: number;
   totalPages?: number;
 };
+
+export interface FeaturedEquipment {
+  id: string;
+  name: string;
+  category: string;
+  location: string;
+  price: number;
+  rentalType: "daily" | "weekly" | "monthly";
+  image: string;
+  condition: string;
+  ratingAverage: number;
+  reviewCount: number;
+}
+
+export interface CustomerReview {
+  id: string;
+  customerName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
