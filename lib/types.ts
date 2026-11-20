@@ -31,6 +31,59 @@ export interface FeaturedEquipment {
   condition: string;
   ratingAverage: number;
   reviewCount: number;
+  availableQuantity?: number;
+}
+
+export interface Equipment {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  location: string;
+  price: number;
+  rentalType: "daily" | "weekly" | "monthly";
+  quantity: number;
+  availableQuantity: number;
+  condition: string;
+  brand: string;
+  model: string;
+  image: string;
+  terms: string;
+  ratingAverage: number;
+  reviewCount: number;
+  ownerInfo: {
+    name: string;
+    image?: string;
+  };
+}
+
+export interface EquipmentQuery {
+  search?: string;
+  location?: string;
+  category?: string;
+  rentalType?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  available?: boolean;
+  sort?: "recent" | "priceAsc" | "priceDesc" | "rating";
+  page?: number;
+  limit?: number;
+}
+
+export interface BookingCheckoutPayload {
+  equipmentId: string;
+  startDate: string;
+  endDate: string;
+  requiredQuantity: number;
+  contactNumber: string;
+  deliveryAddress: string;
+  notes?: string;
+}
+
+export interface CheckoutResponse {
+  url: string;
+  sessionId: string;
+  bookingId: string;
 }
 
 export interface CustomerReview {

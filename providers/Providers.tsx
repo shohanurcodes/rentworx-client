@@ -2,14 +2,17 @@
 
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { FavoritesProvider } from "@/providers/FavoritesProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
       <AuthProvider>
-        {children}
-        <Toaster />
+        <FavoritesProvider>
+          {children}
+          <Toaster />
+        </FavoritesProvider>
       </AuthProvider>
     </ThemeProvider>
   );
