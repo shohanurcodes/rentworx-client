@@ -86,6 +86,33 @@ export interface CheckoutResponse {
   bookingId: string;
 }
 
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+export type BookingStatus = "pending" | "confirmed" | "completed" | "cancelled";
+
+export interface BookingSummary {
+  id: string;
+  equipmentInfo: {
+    name: string;
+    image?: string;
+    location?: string;
+    category?: string;
+    email?: string;
+  };
+  startDate: string;
+  endDate: string;
+  rentalType: string;
+  duration: number;
+  requiredQuantity: number;
+  unitPrice: number;
+  totalAmount: number;
+  paymentStatus: PaymentStatus;
+  bookingStatus: BookingStatus;
+  transactionId?: string;
+  stripeSessionId?: string;
+  bookingDate: string;
+  createdAt: string;
+}
+
 export interface CustomerReview {
   id: string;
   customerName: string;
