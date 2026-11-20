@@ -13,6 +13,7 @@ import {
   Star,
   UserRound,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { BookingModal } from "@/components/booking/BookingModal";
 import { FavoriteButton } from "@/components/equipment/favorite-button";
@@ -28,6 +29,12 @@ export function EquipmentDetails({ id }: { id: string }) {
   const [reviews, setReviews] = useState<CustomerReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("checkout") === "cancelled") {
+      toast.info("Checkout cancelled. You were not charged.");
+    }
+  }, []);
 
   useEffect(() => {
     let active = true;
