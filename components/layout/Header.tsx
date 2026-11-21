@@ -7,6 +7,7 @@ import { LayoutDashboard, LogOut, Menu, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Logo } from "@/components/layout/logo";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useAuth } from "@/providers/AuthProvider";
@@ -73,6 +74,11 @@ export function Header() {
             <div className="h-9 w-40 animate-pulse rounded-xl bg-secondary" />
           ) : user ? (
             <>
+              {user.role !== "customer" && (
+                <Badge variant="outline" className="hidden capitalize sm:inline-flex">
+                  {user.role}
+                </Badge>
+              )}
               <Button asChild variant="ghost" size="sm">
                 <Link href="/dashboard">
                   <LayoutDashboard />
@@ -132,6 +138,11 @@ export function Header() {
 
             {!isLoading && user ? (
               <>
+                {user.role !== "customer" && (
+                  <Badge variant="outline" className="w-fit capitalize">
+                    {user.role}
+                  </Badge>
+                )}
                 <Link
                   href="/dashboard"
                   className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
