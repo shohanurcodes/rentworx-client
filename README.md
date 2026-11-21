@@ -10,6 +10,8 @@ RentWorx lets equipment owners list equipment for rent and lets customers browse
 
 `https://<vercel-app>.vercel.app` _(add after deployment)_
 
+Repository: <https://github.com/shohanurcodes/rentworx-client>
+
 ## Key features
 
 - Email/password registration and login with BetterAuth
@@ -57,4 +59,23 @@ npm run typecheck  # TypeScript check
 
 See [`.env.example`](./.env.example). Only `NEXT_PUBLIC_*` values are exposed to the browser. MongoDB, Google OAuth, and BetterAuth secrets stay server-side.
 
-See also [API_CONTRACT.md](./API_CONTRACT.md).
+## Deployment — Vercel
+
+Import the repository into Vercel. `vercel.json` pins the Next.js framework and build command.
+
+Production environment variables:
+
+```text
+MONGODB_URI=<Atlas connection string>
+BETTER_AUTH_SECRET=<32+ byte random secret>
+BETTER_AUTH_URL=https://<vercel-app>.vercel.app
+NEXT_PUBLIC_CLIENT_URL=https://<vercel-app>.vercel.app
+NEXT_PUBLIC_API_URL=https://<render-service>.onrender.com/api
+GOOGLE_CLIENT_ID=<optional>
+GOOGLE_CLIENT_SECRET=<optional>
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=<optional>
+```
+
+`NEXT_PUBLIC_API_URL` must include `/api` and must point to the deployed Render service. The server's `CLIENT_URL` and `AUTH_*` values must point back to this Vercel URL.
+
+See also [API_CONTRACT.md](../API_CONTRACT.md).
