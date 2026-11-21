@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { refreshAccessToken } from "@/lib/auth-client";
 import { AnalyticsChart } from "@/components/dashboard/AnalyticsChart";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { Badge } from "@/components/ui/badge";
@@ -51,6 +52,8 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
+    await refreshAccessToken();
+
     const [analyticsResponse, equipmentResponse, bookingsResponse, usersResponse] =
       await Promise.all([
         fetchAdminAnalytics(),
@@ -69,8 +72,14 @@ export function AdminDashboard() {
     let active = true;
 
     load()
-      .catch(() => {
-        if (active) toast.error("Unable to load the admin dashboard");
+      .catch((error: unknown) => {
+        if (active) {
+          toast.error(
+            error instanceof Error && error.message
+              ? error.message
+              : "Unable to load the admin dashboard",
+          );
+        }
       })
       .finally(() => {
         if (active) setLoading(false);

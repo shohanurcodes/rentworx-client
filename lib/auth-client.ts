@@ -3,6 +3,8 @@
 import { createAuthClient } from "better-auth/react";
 import { jwtClient } from "better-auth/client/plugins";
 
+import { setAccessToken } from "@/lib/token";
+
 const clientUrl =
   process.env.NEXT_PUBLIC_CLIENT_URL ?? "http://localhost:3000";
 
@@ -30,5 +32,12 @@ export async function getJwtToken(): Promise<string> {
     throw new Error("Unable to retrieve an access token");
   }
 
+  return token;
+}
+
+/** Refreshes and stores the JWT before authenticated dashboard requests. */
+export async function refreshAccessToken(): Promise<string> {
+  const token = await getJwtToken();
+  setAccessToken(token);
   return token;
 }

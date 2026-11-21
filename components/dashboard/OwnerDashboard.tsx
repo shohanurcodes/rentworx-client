@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { refreshAccessToken } from "@/lib/auth-client";
 import { AnalyticsChart } from "@/components/dashboard/AnalyticsChart";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { Badge } from "@/components/ui/badge";
@@ -86,6 +87,8 @@ export function OwnerDashboard() {
   const [uploading, setUploading] = useState(false);
 
   const load = useCallback(async () => {
+    await refreshAccessToken();
+
     const [analyticsResponse, equipmentResponse, bookingsResponse] =
       await Promise.all([
         fetchOwnerAnalytics(),
@@ -102,8 +105,14 @@ export function OwnerDashboard() {
     let active = true;
 
     load()
-      .catch(() => {
-        if (active) toast.error("Unable to load your owner dashboard");
+      .catch((error: unknown) => {
+        if (active) {
+          toast.error(
+            error instanceof Error && error.message
+              ? error.message
+              : "Unable to load your owner dashboard",
+          );
+        }
       })
       .finally(() => {
         if (active) setLoading(false);
