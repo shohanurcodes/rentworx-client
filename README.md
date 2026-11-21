@@ -8,7 +8,7 @@ RentWorx lets equipment owners list equipment for rent and lets customers browse
 
 ## Live URL
 
-`https://<vercel-app>.vercel.app` _(add after deployment)_
+<https://rentworx-client.vercel.app>
 
 Repository: <https://github.com/shohanurcodes/rentworx-client>
 
@@ -68,9 +68,9 @@ Production environment variables:
 ```text
 MONGODB_URI=<Atlas connection string>
 BETTER_AUTH_SECRET=<32+ byte random secret>
-BETTER_AUTH_URL=https://<vercel-app>.vercel.app
-NEXT_PUBLIC_CLIENT_URL=https://<vercel-app>.vercel.app
-NEXT_PUBLIC_API_URL=https://<render-service>.onrender.com/api
+BETTER_AUTH_URL=https://rentworx-client.vercel.app
+NEXT_PUBLIC_CLIENT_URL=https://rentworx-client.vercel.app
+NEXT_PUBLIC_API_URL=https://rentworx-server.onrender.com/api
 GOOGLE_CLIENT_ID=<optional>
 GOOGLE_CLIENT_SECRET=<optional>
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=<optional>
