@@ -111,6 +111,16 @@ export interface BookingSummary {
   stripeSessionId?: string;
   bookingDate: string;
   createdAt: string;
+  customerInfo: {
+    name: string;
+    email?: string;
+    image?: string;
+  };
+  ownerInfo: {
+    name: string;
+    email?: string;
+    image?: string;
+  };
 }
 
 export interface CustomerReview {
@@ -119,4 +129,81 @@ export interface CustomerReview {
   rating: number;
   comment: string;
   createdAt: string;
+}
+
+export interface ManageEquipment extends FeaturedEquipment {
+  ownerInfo: {
+    name: string;
+    email?: string;
+    image?: string;
+  };
+  status: "pending" | "approved" | "rejected";
+  description: string;
+  quantity: number;
+  brand: string;
+  model: string;
+  terms: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EquipmentPayload {
+  name: string;
+  description: string;
+  category: string;
+  location: string;
+  price: number;
+  rentalType: "daily" | "weekly" | "monthly";
+  quantity: number;
+  availableQuantity: number;
+  condition: string;
+  brand: string;
+  model: string;
+  image: string;
+  terms: string;
+}
+
+export interface OwnerAnalytics {
+  equipment: {
+    total: number;
+    approved: number;
+    pending: number;
+    rejected: number;
+  };
+  bookings: {
+    total: number;
+    pending: number;
+    confirmed: number;
+    completed: number;
+    cancelled: number;
+  };
+  revenue: number;
+}
+
+export interface AdminAnalytics {
+  users: {
+    total: number;
+    customers: number;
+    owners: number;
+    admins: number;
+  };
+  equipment: {
+    total: number;
+    approved: number;
+    pending: number;
+    rejected: number;
+  };
+  bookings: {
+    total: number;
+    pending: number;
+    confirmed: number;
+    completed: number;
+    cancelled: number;
+  };
+  revenue: number;
+}
+
+export interface UploadResponse {
+  url: string;
+  deleteUrl?: string;
 }
