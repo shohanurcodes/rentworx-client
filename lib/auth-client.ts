@@ -13,26 +13,35 @@ export const authClient = createAuthClient({
   plugins: [jwtClient()],
 });
 
-type TokenResponse = { data?: { token?: string } } | null | undefined;
+type TokenResponse =
+  | { data?: { token?: string } | string; token?: string }
+  | null
+  | undefined;
 
-/** Works with both getToken() and token() across BetterAuth client versions. */
+/** Returns the BetterAuth JWT, supporting both client method names and shapes. */
 export async function getJwtToken(): Promise<string> {
   const client = authClient as unknown as {
     getToken?: () => Promise<TokenResponse>;
     token?: () => Promise<TokenResponse>;
   };
 
-  const response = client.getToken
-    ? await client.getToken()
-    : await client.token?.();
+  const methods = [client.token, client.getToken].filter(
+    (method): method is () => Promise<TokenResponse> => typeof method === "function",
+  );
 
-  const token = response?.data?.token;
+  for (const method of methods) {
+    const response = await method.call(client);
+    const data = response?.data;
 
-  if (!token) {
-    throw new Error("Unable to retrieve an access token");
+    const token =
+      typeof data === "string"
+        ? data
+        : data?.token ?? response?.token;
+
+    if (token) return token;
   }
 
-  return token;
+  throw new Error("Unable to retrieve an access token");
 }
 
 /** Refreshes and stores the JWT before authenticated dashboard requests. */
