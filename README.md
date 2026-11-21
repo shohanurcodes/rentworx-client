@@ -76,6 +76,6 @@ GOOGLE_CLIENT_SECRET=<optional>
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=<optional>
 ```
 
-`NEXT_PUBLIC_API_URL` must include `/api` and must point to the deployed Render service. The server's `CLIENT_URL` and `AUTH_*` values must point back to this Vercel URL.
+`NEXT_PUBLIC_API_URL` must include `/api` and must point to the deployed Render service. The server's `CLIENT_URL` and `AUTH_*` values must point back to this Vercel URL. Do not copy the `localhost` values from `.env.local` into Vercel; those are for local development only and will break JWT issuer/audience validation.
 
 See also [API_CONTRACT.md](../API_CONTRACT.md).
