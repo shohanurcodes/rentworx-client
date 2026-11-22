@@ -117,6 +117,8 @@ export async function apiFetch<T>(
     if (response.status === 401 && auth && attempt === 1) {
       clearAccessToken();
 
+      let refreshError: unknown;
+
       try {
         const refreshed = await refreshAccessToken();
 
@@ -124,8 +126,17 @@ export async function apiFetch<T>(
           finalHeaders.set("Authorization", `Bearer ${refreshed}`);
           return apiFetch<T>(path, options, attempt + 1);
         }
-      } catch {
-        // Fall through to the original error below.
+      } catch (error) {
+        refreshError = error;
+      }
+
+      if (refreshError) {
+        throw new ApiRequestError(
+          refreshError instanceof Error
+            ? refreshError.message
+            : "Your session has expired. Please sign in again.",
+          401,
+        );
       }
     }
 
