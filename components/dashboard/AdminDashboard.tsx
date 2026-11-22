@@ -477,6 +477,7 @@ export function AdminDashboard() {
       </div>
 
       {analytics && (
+        <>
         <div className="grid gap-5 lg:grid-cols-2">
           <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
             <h2 className="font-bold">Bookings by status</h2>
@@ -506,6 +507,41 @@ export function AdminDashboard() {
             </div>
           </div>
         </div>
+
+        <div className="mt-5 grid gap-5 lg:grid-cols-2">
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <h2 className="font-bold">Monthly bookings</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Booking volume across the platform, last 6 months.
+            </p>
+            <div className="mt-4">
+              <AnalyticsChart
+                label="Bookings"
+                data={analytics.monthlyBookings.map((point) => ({
+                  name: point.month,
+                  value: point.bookings,
+                }))}
+              />
+            </div>
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <h2 className="font-bold">Monthly revenue</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Revenue from paid bookings, last 6 months.
+            </p>
+            <div className="mt-4">
+              <AnalyticsChart
+                label="Revenue"
+                prefix="$"
+                data={analytics.monthlyRevenue.map((point) => ({
+                  name: point.month,
+                  value: point.revenue,
+                }))}
+              />
+            </div>
+          </div>
+        </div>
+        </>
       )}
 
       <section>

@@ -459,6 +459,42 @@ export function OwnerDashboard() {
         </Card>
       )}
 
+      {analytics && (
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Card>
+            <CardContent className="p-5">
+              <h2 className="font-bold">Monthly earnings</h2>
+              <p className="mb-4 mt-1 text-sm text-muted-foreground">
+                Completed Stripe payments, last 6 months.
+              </p>
+              <AnalyticsChart
+                label="Earnings"
+                prefix="$"
+                data={analytics.monthlyEarnings.map((point) => ({
+                  name: point.month,
+                  value: point.earnings,
+                }))}
+              />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-5">
+              <h2 className="font-bold">Monthly bookings</h2>
+              <p className="mb-4 mt-1 text-sm text-muted-foreground">
+                Rental requests for your equipment, last 6 months.
+              </p>
+              <AnalyticsChart
+                label="Bookings"
+                data={analytics.monthlyBookings.map((point) => ({
+                  name: point.month,
+                  value: point.bookings,
+                }))}
+              />
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <section>
           <div className="flex flex-wrap items-center justify-between gap-3">

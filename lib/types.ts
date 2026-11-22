@@ -163,6 +163,21 @@ export interface EquipmentPayload {
   terms: string;
 }
 
+export interface MonthlyBookingPoint {
+  month: string;
+  bookings: number;
+}
+
+export interface MonthlyRevenuePoint {
+  month: string;
+  revenue: number;
+}
+
+export interface MonthlyEarningsPoint {
+  month: string;
+  earnings: number;
+}
+
 export interface OwnerAnalytics {
   equipment: {
     total: number;
@@ -178,6 +193,8 @@ export interface OwnerAnalytics {
     cancelled: number;
   };
   revenue: number;
+  monthlyBookings: MonthlyBookingPoint[];
+  monthlyEarnings: MonthlyEarningsPoint[];
 }
 
 export interface AdminAnalytics {
@@ -201,6 +218,8 @@ export interface AdminAnalytics {
     cancelled: number;
   };
   revenue: number;
+  monthlyBookings: MonthlyBookingPoint[];
+  monthlyRevenue: MonthlyRevenuePoint[];
 }
 
 export interface UploadResponse {
