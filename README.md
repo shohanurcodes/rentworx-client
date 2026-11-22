@@ -21,9 +21,11 @@ Repository: <https://github.com/shohanurcodes/rentworx-client>
 - Server-side search, filtering, sorting, and pagination
 - Favorites saved in MongoDB
 - Stripe Checkout booking flow
-- Customer, owner, and admin dashboards with charts
+- Customer, owner, and admin dashboards with profile editing and reusable data tables
+- 6-month analytics charts for platform revenue, bookings, and owner earnings
+- Safe post-login redirects, cold-start API retry, and reload-friendly error pages
 - Dark/light theme persisted with localStorage
-- Responsive Shadcn UI with Framer Motion animations
+- Responsive Shadcn UI with Framer Motion animations, four customer reviews, and a Why Choose Us section
 
 ## npm packages
 
