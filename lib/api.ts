@@ -1,3 +1,4 @@
+import { refreshAccessToken } from "@/lib/auth-client";
 import { clearAccessToken, getAccessToken } from "@/lib/token";
 import type { ApiMeta } from "@/lib/types";
 
@@ -27,9 +28,46 @@ type RequestOptions = RequestInit & {
   auth?: boolean;
 };
 
+function isTokenExpired(token: string) {
+  const payload = token.split(".")[1];
+
+  if (!payload) return false;
+
+  try {
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const decoded = JSON.parse(atob(normalized)) as { exp?: number };
+
+    return (
+      typeof decoded.exp === "number" &&
+      decoded.exp * 1000 <= Date.now() + 30_000
+    );
+  } catch {
+    return false;
+  }
+}
+
+async function ensureAccessToken() {
+  const current = getAccessToken();
+
+  if (current && !isTokenExpired(current)) {
+    return current;
+  }
+
+  if (current) {
+    clearAccessToken();
+  }
+
+  try {
+    return await refreshAccessToken();
+  } catch {
+    return null;
+  }
+}
+
 export async function apiFetch<T>(
   path: string,
   options: RequestOptions = {},
+  attempt = 1,
 ): Promise<ApiEnvelope<T>> {
   const { auth = true, headers, body, ...rest } = options;
 
@@ -40,7 +78,7 @@ export async function apiFetch<T>(
   }
 
   if (auth) {
-    const token = getAccessToken();
+    const token = await ensureAccessToken();
 
     if (token) {
       finalHeaders.set("Authorization", `Bearer ${token}`);
@@ -76,6 +114,21 @@ export async function apiFetch<T>(
   }
 
   if (!response.ok || payload.success === false) {
+    if (response.status === 401 && auth && attempt === 1) {
+      clearAccessToken();
+
+      try {
+        const refreshed = await refreshAccessToken();
+
+        if (refreshed) {
+          finalHeaders.set("Authorization", `Bearer ${refreshed}`);
+          return apiFetch<T>(path, options, attempt + 1);
+        }
+      } catch {
+        // Fall through to the original error below.
+      }
+    }
+
     if (response.status === 401) {
       clearAccessToken();
     }

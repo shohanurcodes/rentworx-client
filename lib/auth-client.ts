@@ -14,7 +14,11 @@ export const authClient = createAuthClient({
 });
 
 type TokenResponse =
-  | { data?: { token?: string } | string; token?: string }
+  | {
+      data?: { token?: string } | string;
+      token?: string;
+      error?: { status?: number; message?: string };
+    }
   | null
   | undefined;
 
@@ -29,8 +33,11 @@ export async function getJwtToken(): Promise<string> {
     (method): method is () => Promise<TokenResponse> => typeof method === "function",
   );
 
+  let lastResponse: TokenResponse = undefined;
+
   for (const method of methods) {
     const response = await method.call(client);
+    lastResponse = response;
     const data = response?.data;
 
     const token =
@@ -41,7 +48,17 @@ export async function getJwtToken(): Promise<string> {
     if (token) return token;
   }
 
-  throw new Error("Unable to retrieve an access token");
+  const error = lastResponse?.error;
+
+  if (error?.status === 401) {
+    throw new Error("Your session has expired. Please sign in again.");
+  }
+
+  if (error?.status === 429) {
+    throw new Error("Too many requests. Please try again shortly.");
+  }
+
+  throw new Error(error?.message ?? "Unable to retrieve an access token");
 }
 
 /** Refreshes and stores the JWT before authenticated dashboard requests. */
