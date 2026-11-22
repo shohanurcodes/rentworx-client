@@ -25,10 +25,26 @@ export function Header() {
   const { user, isLoading, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [hash, setHash] = useState("");
 
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const syncHash = () => setHash(window.location.hash);
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, []);
+
+  function isActive(href: string) {
+    if (href.includes("#")) {
+      return pathname === "/" && hash === href.slice(href.indexOf("#"));
+    }
+    if (href === "/") return pathname === "/" && !hash;
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   const handleLogout = async () => {
     try {
@@ -51,7 +67,7 @@ export function Header() {
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
           {navItems.map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href.split("#")[0]) && item.href !== "/";
+            const active = isActive(item.href);
 
             return (
               <Link

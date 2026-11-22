@@ -1,21 +1,28 @@
 "use client";
 
 import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
+import { safeNextPath } from "@/lib/redirect";
 import { PageLoader } from "@/components/ui/page-loader";
 import { useAuth } from "@/providers/AuthProvider";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const router = useRouter();
-  const pathname = usePathname();
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+      const current =
+        typeof window !== "undefined"
+          ? `${window.location.pathname}${window.location.search}`
+          : "/dashboard";
+
+      router.replace(
+        `/login?next=${encodeURIComponent(safeNextPath(current))}`,
+      );
     }
-  }, [isLoading, user, router, pathname]);
+  }, [isLoading, user, router]);
 
   if (isLoading) {
     return <PageLoader />;

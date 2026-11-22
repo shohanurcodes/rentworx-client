@@ -20,6 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PageLoader } from "@/components/ui/page-loader";
 import { ApiRequestError } from "@/lib/api";
 import { fetchBookingStatus } from "@/lib/booking-api";
+import { safeNextPath } from "@/lib/redirect";
 import type { BookingSummary } from "@/lib/types";
 
 function formatDate(value: string) {
@@ -95,7 +96,10 @@ export function PaymentSuccess() {
   }
 
   if (needsSignIn) {
-    const next = `/payment/success?session_id=${encodeURIComponent(sessionId)}&bookingId=${encodeURIComponent(bookingId)}`;
+    const next = safeNextPath(
+      `/payment/success?session_id=${encodeURIComponent(sessionId)}&bookingId=${encodeURIComponent(bookingId)}`,
+      "/dashboard",
+    );
 
     return (
       <div className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center px-4 text-center">

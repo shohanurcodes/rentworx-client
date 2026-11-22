@@ -9,12 +9,14 @@ import {
   CalendarDays,
   MapPin,
   Package,
+  RotateCcw,
   ShieldCheck,
   Star,
   UserRound,
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { ApiRequestError } from "@/lib/api";
 import { BookingModal } from "@/components/booking/BookingModal";
 import { FavoriteButton } from "@/components/equipment/favorite-button";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +31,8 @@ export function EquipmentDetails({ id }: { id: string }) {
   const [reviews, setReviews] = useState<CustomerReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("checkout") === "cancelled") {
@@ -39,14 +43,28 @@ export function EquipmentDetails({ id }: { id: string }) {
   useEffect(() => {
     let active = true;
 
+    setLoading(true);
+    setNotFound(false);
+    setError("");
+
     Promise.all([fetchEquipmentById(id), loadCustomerReviews()])
       .then(([equipmentResponse, reviewData]) => {
         if (!active) return;
         setEquipment(equipmentResponse.data);
         setReviews(reviewData.slice(0, 3));
       })
-      .catch(() => {
-        if (active) setNotFound(true);
+      .catch((caught) => {
+        if (!active) return;
+
+        if (caught instanceof ApiRequestError && caught.status === 404) {
+          setNotFound(true);
+        } else {
+          setError(
+            caught instanceof Error
+              ? caught.message
+              : "Unable to load this listing.",
+          );
+        }
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -55,12 +73,31 @@ export function EquipmentDetails({ id }: { id: string }) {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [id, attempt]);
 
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="h-[520px] animate-pulse rounded-3xl border border-border bg-secondary" />
+      </div>
+    );
+  }
+
+  if (error && !notFound) {
+    return (
+      <div className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center px-4 py-16 text-center">
+        <Package className="size-10 text-primary" />
+        <h1 className="mt-5 text-2xl font-bold">Could not load this listing</h1>
+        <p className="mt-3 text-sm text-muted-foreground">{error}</p>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Button onClick={() => setAttempt((value) => value + 1)}>
+            <RotateCcw />
+            Try again
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/all-equipment">Back to all equipment</Link>
+          </Button>
+        </div>
       </div>
     );
   }

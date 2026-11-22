@@ -11,6 +11,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { safeNextPath } from "@/lib/redirect";
 import { useAuth } from "@/providers/AuthProvider";
 
 const loginSchema = z.object({
@@ -31,11 +32,11 @@ export function LoginForm() {
     defaultValues: { email: "", password: "" },
   });
 
-  const nextPath = searchParams.get("next");
+  const nextPath = safeNextPath(searchParams.get("next"));
 
   useEffect(() => {
     if (!isLoading && user) {
-      router.replace(nextPath?.startsWith("/") ? nextPath : "/dashboard");
+      router.replace(nextPath);
     }
   }, [isLoading, user, nextPath, router]);
 
@@ -56,7 +57,7 @@ export function LoginForm() {
       setSubmitting(true);
       await loginWithEmail(parsed.data.email, parsed.data.password);
       toast.success("Welcome back to RentWorx");
-      router.replace(nextPath?.startsWith("/") ? nextPath : "/dashboard");
+      router.replace(nextPath);
       router.refresh();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Login failed");

@@ -5,6 +5,9 @@ import type { ApiMeta } from "@/lib/types";
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api";
 
+const REQUEST_TIMEOUT_MS = 25_000;
+const MAX_ATTEMPTS = 2;
+
 export class ApiRequestError extends Error {
   public readonly status: number;
   public readonly details?: unknown;
@@ -86,6 +89,8 @@ export async function apiFetch<T>(
   }
 
   let response: Response;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
     response = await fetch(`${API_BASE_URL}${path}`, {
@@ -93,12 +98,33 @@ export async function apiFetch<T>(
       headers: finalHeaders,
       body,
       credentials: "omit",
+      signal: controller.signal,
     });
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new ApiRequestError(
+        "The server took too long to respond. Please try again.",
+        504,
+      );
+    }
+
     throw new ApiRequestError(
       "Cannot reach the server. Please try again shortly.",
       0,
     );
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  // Render's free tier can return a gateway error while waking up. Retry
+  // idempotent GETs once so a cold start does not surface as a broken page.
+  if (
+    rest.method === "GET" &&
+    attempt < MAX_ATTEMPTS &&
+    (response.status === 502 || response.status === 503 || response.status === 504)
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 600 * attempt));
+    return apiFetch<T>(path, options, attempt + 1);
   }
 
   const payload = (await response.json().catch(() => null)) as
