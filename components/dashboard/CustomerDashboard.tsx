@@ -168,7 +168,7 @@ export function CustomerDashboard() {
 
   return (
     <div className="space-y-10">
-      <div className="grid gap-5 sm:grid-cols-3">
+      <div id="overview" className="grid gap-5 sm:grid-cols-3">
         <StatCard
           label="Total rentals"
           value={bookings.length}
@@ -189,10 +189,10 @@ export function CustomerDashboard() {
         />
       </div>
 
-      <section>
+      <section id="rentals">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold">My rentals</h2>
+            <h2 className="font-heading text-xl font-bold">My rentals</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Every booking with its payment and rental status.
             </p>
@@ -213,8 +213,8 @@ export function CustomerDashboard() {
         />
       </section>
 
-      <section>
-        <h2 className="text-xl font-bold">Favorites</h2>
+      <section id="favorites">
+        <h2 className="font-heading text-xl font-bold">Favorites</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Equipment you saved for later, with quick actions.
         </p>

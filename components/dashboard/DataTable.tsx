@@ -23,9 +23,9 @@ export function DataTable<T>({
   empty?: string;
 }) {
   return (
-    <div className="mt-5 overflow-x-auto rounded-2xl border border-border bg-card shadow-sm">
+    <div className="surface-card mt-5 overflow-x-auto">
       <table className="w-full min-w-[760px] border-collapse text-left text-sm">
-        <thead className="bg-secondary/60 text-xs uppercase tracking-wide text-muted-foreground">
+        <thead className="bg-muted/70 text-xs uppercase tracking-wider text-muted-foreground">
           <tr>
             {columns.map((column) => (
               <th

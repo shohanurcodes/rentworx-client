@@ -449,7 +449,7 @@ export function AdminDashboard() {
 
   return (
     <div className="space-y-10">
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div id="overview" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Users"
           value={analytics?.users.total ?? users.length}
@@ -479,7 +479,7 @@ export function AdminDashboard() {
       {analytics && (
         <>
         <div className="grid gap-5 lg:grid-cols-2">
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <div className="surface-card p-5">
             <h2 className="font-bold">Bookings by status</h2>
             <div className="mt-4">
               <AnalyticsChart
@@ -493,7 +493,7 @@ export function AdminDashboard() {
               />
             </div>
           </div>
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <div className="surface-card p-5">
             <h2 className="font-bold">Equipment approvals</h2>
             <div className="mt-4">
               <AnalyticsChart
@@ -509,7 +509,7 @@ export function AdminDashboard() {
         </div>
 
         <div className="mt-5 grid gap-5 lg:grid-cols-2">
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <div className="surface-card p-5">
             <h2 className="font-bold">Monthly bookings</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Booking volume across the platform, last 6 months.
@@ -524,7 +524,7 @@ export function AdminDashboard() {
               />
             </div>
           </div>
-          <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <div className="surface-card p-5">
             <h2 className="font-bold">Monthly revenue</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Revenue from paid bookings, last 6 months.
@@ -544,10 +544,10 @@ export function AdminDashboard() {
         </>
       )}
 
-      <section>
+      <section id="equipment">
         <div className="flex flex-wrap items-center gap-2">
-          <CheckCircle2 className="size-5 text-primary" />
-          <h2 className="text-xl font-bold">All equipment</h2>
+          <CheckCircle2 className="size-5 text-amber-500" />
+          <h2 className="font-heading text-xl font-bold">All equipment</h2>
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
           Approve, reject, update, or remove any listing on the platform.
@@ -561,8 +561,8 @@ export function AdminDashboard() {
         />
       </section>
 
-      <section>
-        <h2 className="text-xl font-bold">All rentals</h2>
+      <section id="rentals">
+        <h2 className="font-heading text-xl font-bold">All rentals</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Monitor every booking across customers, owners, and equipment.
         </p>
@@ -575,10 +575,10 @@ export function AdminDashboard() {
         />
       </section>
 
-      <section>
+      <section id="users">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold">All users</h2>
+            <h2 className="font-heading text-xl font-bold">All users</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Change roles and manage registered accounts.
             </p>

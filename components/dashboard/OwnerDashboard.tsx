@@ -412,7 +412,7 @@ export function OwnerDashboard() {
 
   return (
     <div className="space-y-10">
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div id="overview" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Equipment"
           value={analytics?.equipment.total ?? equipment.length}
@@ -461,7 +461,7 @@ export function OwnerDashboard() {
 
       {analytics && (
         <div className="grid gap-5 lg:grid-cols-2">
-          <Card>
+          <Card id="earnings">
             <CardContent className="p-5">
               <h2 className="font-bold">Monthly earnings</h2>
               <p className="mb-4 mt-1 text-sm text-muted-foreground">
@@ -496,10 +496,10 @@ export function OwnerDashboard() {
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <section>
+        <section id="equipment">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-xl font-bold">My equipment</h2>
+              <h2 className="font-heading text-xl font-bold">My equipment</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 New listings are reviewed by an admin before going live.
               </p>
@@ -736,8 +736,8 @@ export function OwnerDashboard() {
         </DialogContent>
       </Dialog>
 
-      <section>
-        <h2 className="text-xl font-bold">Rental requests</h2>
+      <section id="requests">
+        <h2 className="font-heading text-xl font-bold">Rental requests</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Confirm, complete, or cancel rentals for your equipment.
         </p>

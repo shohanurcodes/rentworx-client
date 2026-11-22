@@ -97,9 +97,9 @@ export function ProfilePanel({ user }: { user: AuthUser }) {
   }
 
   return (
-    <section>
+    <section id="profile">
       <div className="flex flex-wrap items-center gap-4">
-        <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-2xl border border-border bg-primary/10 text-primary">
+        <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-300 to-orange-500 text-[#251803]">
           {profile.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
