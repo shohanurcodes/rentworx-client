@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { EQUIPMENT_CATEGORIES, RENTAL_TYPES } from "@/lib/categories";
 import { fetchEquipment } from "@/lib/equipment-api";
 import type { EquipmentQuery, FeaturedEquipment } from "@/lib/types";
@@ -124,10 +125,11 @@ export function CatalogClient() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       <div className="max-w-2xl">
-        <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">
+        <span className="mb-4 block h-1 w-12 rounded-full bg-gradient-to-r from-amber-500 to-orange-500" />
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400">
           Marketplace
         </p>
-        <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+        <h1 className="mt-3 font-heading text-3xl font-bold tracking-tight sm:text-4xl">
           All equipment
         </h1>
         <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
@@ -141,7 +143,7 @@ export function CatalogClient() {
           event.preventDefault();
           updateFilter("search", searchDraft.trim());
         }}
-        className="mt-8 flex flex-col gap-3 rounded-2xl border border-border bg-card p-3 shadow-sm sm:flex-row"
+        className="surface-card mt-8 flex flex-col gap-3 p-3 sm:flex-row"
       >
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -158,13 +160,13 @@ export function CatalogClient() {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[260px_1fr]">
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <details open className="rounded-2xl border border-border bg-card p-5">
-            <summary className="flex cursor-pointer items-center justify-between gap-2 font-semibold">
+          <details open className="surface-card p-5">
+            <summary className="flex cursor-pointer items-center justify-between gap-2 font-heading font-semibold">
               <span className="inline-flex items-center gap-2">
-                <SlidersHorizontal className="size-4 text-primary" />
+                <SlidersHorizontal className="size-4 text-amber-600 dark:text-amber-400" />
                 Filters
                 {activeFilterCount > 0 && (
-                  <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                  <span className="rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-[#251803]">
                     {activeFilterCount}
                   </span>
                 )}
@@ -300,10 +302,7 @@ export function CatalogClient() {
           {loading ? (
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="h-[360px] animate-pulse rounded-2xl border border-border bg-secondary"
-                />
+                <Skeleton key={index} className="h-[360px] rounded-2xl" />
               ))}
             </div>
           ) : items.length ? (
@@ -315,8 +314,12 @@ export function CatalogClient() {
           ) : (
             <Card>
               <CardContent className="flex min-h-64 flex-col items-center justify-center p-8 text-center">
-                <Search className="size-8 text-muted-foreground" />
-                <h2 className="mt-4 text-lg font-semibold">No equipment found</h2>
+                <div className="grid size-14 place-items-center rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
+                  <Search className="size-6" />
+                </div>
+                <h2 className="mt-5 font-heading text-lg font-semibold">
+                  No equipment found
+                </h2>
                 <p className="mt-2 max-w-sm text-sm text-muted-foreground">
                   Try widening your filters or searching for a different item.
                 </p>

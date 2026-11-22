@@ -22,6 +22,7 @@ import { FavoriteButton } from "@/components/equipment/favorite-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { fetchEquipmentById } from "@/lib/equipment-api";
 import { loadCustomerReviews } from "@/lib/home-data";
 import type { CustomerReview, Equipment } from "@/lib/types";
@@ -78,7 +79,7 @@ export function EquipmentDetails({ id }: { id: string }) {
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="h-[520px] animate-pulse rounded-3xl border border-border bg-secondary" />
+        <Skeleton className="h-[520px] rounded-3xl" />
       </div>
     );
   }
@@ -156,15 +157,24 @@ export function EquipmentDetails({ id }: { id: string }) {
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
         <div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-secondary">
+          <div className="group relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-secondary shadow-[var(--ds-shadow-soft)]">
             <Image
               src={equipment.image}
               alt={equipment.name}
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 55vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+            <div className="absolute left-5 top-5 flex flex-wrap gap-2">
+              <Badge variant="accent" className="shadow-md backdrop-blur">
+                {equipment.condition}
+              </Badge>
+              <Badge className="border-white/30 bg-black/40 text-white shadow-md backdrop-blur">
+                {equipment.category}
+              </Badge>
+            </div>
             <FavoriteButton
               equipmentId={equipment.id}
               className="absolute right-4 top-4 size-10"
@@ -185,7 +195,7 @@ export function EquipmentDetails({ id }: { id: string }) {
                 {specs.map((spec) => (
                   <div
                     key={spec.label}
-                    className="rounded-xl border border-border bg-secondary/30 p-4"
+                    className="rounded-xl border border-border bg-muted/50 p-4 transition-colors hover:border-amber-500/40"
                   >
                     <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                       {spec.label}
@@ -218,10 +228,10 @@ export function EquipmentDetails({ id }: { id: string }) {
               </div>
 
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                   {equipment.category}
                 </p>
-                <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+                <h1 className="mt-2 font-heading text-2xl font-bold tracking-tight sm:text-3xl">
                   {equipment.name}
                 </h1>
               </div>
@@ -238,7 +248,7 @@ export function EquipmentDetails({ id }: { id: string }) {
               </div>
 
               <div className="border-t border-border pt-5">
-                <p className="text-3xl font-bold text-foreground">
+                <p className="font-heading text-3xl font-bold text-foreground">
                   ${equipment.price.toLocaleString()}
                   <span className="ml-1 text-sm font-medium text-muted-foreground">
                     / {equipment.rentalType}
@@ -270,12 +280,13 @@ export function EquipmentDetails({ id }: { id: string }) {
                   </p>
                   <p className="text-xs text-muted-foreground">Verified owner</p>
                 </div>
-                <BadgeCheck className="ml-auto size-5 text-primary" />
+                <BadgeCheck className="ml-auto size-5 text-amber-500" />
               </div>
 
               <BookingModal equipment={equipment}>
                 <Button
-                  size="lg"
+                  size="xl"
+                  variant="accent"
                   className="w-full"
                   disabled={equipment.availableQuantity === 0}
                 >
@@ -286,10 +297,16 @@ export function EquipmentDetails({ id }: { id: string }) {
                 </Button>
               </BookingModal>
 
-              <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                <ShieldCheck className="size-4 text-primary" />
-                Secure checkout powered by Stripe
-              </p>
+              <div className="flex items-center justify-center gap-5 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="size-4 text-emerald-500" />
+                  Secure Stripe checkout
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <BadgeCheck className="size-4 text-amber-500" />
+                  Verified owner
+                </span>
+              </div>
             </CardContent>
           </Card>
 

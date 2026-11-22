@@ -13,7 +13,7 @@ function rentalLabel(rentalType: FeaturedEquipment["rentalType"]) {
 
 export function EquipmentCard({ item }: { item: FeaturedEquipment }) {
   return (
-    <Card className="group relative h-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <Card className="surface-card group relative h-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-500/40 hover:shadow-[var(--ds-shadow-lift)]">
       <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
         <Link
           href={`/equipment/${item.id}`}
@@ -29,7 +29,7 @@ export function EquipmentCard({ item }: { item: FeaturedEquipment }) {
           />
         </Link>
         <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
-          <Badge variant="accent" className="shadow-sm">
+          <Badge variant="accent" className="shadow-sm backdrop-blur">
             {item.condition}
           </Badge>
         </div>
@@ -43,15 +43,15 @@ export function EquipmentCard({ item }: { item: FeaturedEquipment }) {
         <Link href={`/equipment/${item.id}`} className="block">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+              <p className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                 {item.category}
               </p>
-              <h3 className="mt-1 line-clamp-1 text-base font-bold text-foreground">
+              <h3 className="mt-1 line-clamp-1 font-heading text-base font-bold text-foreground">
                 {item.name}
               </h3>
             </div>
-            <div className="flex shrink-0 items-center gap-1 text-sm font-semibold text-foreground">
-              <Star className="size-4 fill-accent text-accent" />
+            <div className="flex shrink-0 items-center gap-1 rounded-full bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-700 dark:text-amber-400">
+              <Star className="size-3.5 fill-current" />
               {item.ratingAverage.toFixed(1)}
             </div>
           </div>
@@ -62,7 +62,7 @@ export function EquipmentCard({ item }: { item: FeaturedEquipment }) {
           </div>
 
           <div className="mt-4 flex items-end justify-between gap-3 border-t border-border pt-4">
-            <p className="text-xl font-bold text-foreground">
+            <p className="font-heading text-xl font-bold text-foreground">
               ${item.price.toLocaleString()}
               <span className="ml-1 text-xs font-medium text-muted-foreground">
                 / {rentalLabel(item.rentalType)}
