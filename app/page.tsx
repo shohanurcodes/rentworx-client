@@ -5,6 +5,7 @@ import { HowItWorks } from "@/components/home/HowItWorks";
 import { OwnerCta } from "@/components/home/OwnerCta";
 import { Reviews } from "@/components/home/Reviews";
 import { TrustStrip } from "@/components/home/TrustStrip";
+import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
       <FeaturedEquipment />
       <Categories />
       <HowItWorks />
+      <WhyChooseUs />
       <Reviews />
       <OwnerCta />
     </>

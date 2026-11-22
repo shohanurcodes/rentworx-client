@@ -37,9 +37,9 @@ export function Reviews() {
           description="Real feedback from renters who used RentWorx to find the right gear without the usual back-and-forth."
         />
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {loading
-            ? Array.from({ length: 3 }).map((_, index) => (
+            ? Array.from({ length: 4 }).map((_, index) => (
                 <div
                   key={index}
                   className="h-48 animate-pulse rounded-2xl border border-border bg-secondary"

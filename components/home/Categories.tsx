@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Building2,
   Camera,
@@ -57,38 +60,56 @@ const categories: {
 
 export function Categories() {
   return (
-    <section className="border-y border-border bg-card/60">
+    <section id="categories" className="border-y border-border bg-card/60">
       <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
         <SectionHeading
           eyebrow="Browse by category"
           title="Find gear for every kind of work"
           description="From heavy machinery to production kits, every listing is organised so you can compare options quickly."
+          actionHref="/all-equipment"
+          actionLabel="Browse all equipment"
         />
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.07 } },
+          }}
+        >
           {categories.map((category) => (
-            <Link
+            <motion.div
               key={category.name}
-              href={`/all-equipment?category=${encodeURIComponent(category.name)}`}
-              className="group rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+              variants={{
+                hidden: { opacity: 0, y: 18 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              <div
-                className={`grid size-12 place-items-center rounded-xl bg-gradient-to-br ${category.accent}`}
+              <Link
+                href={`/all-equipment?category=${encodeURIComponent(category.name)}`}
+                className="group block h-full rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
               >
-                <category.icon className="size-6" />
-              </div>
-              <h3 className="mt-5 text-base font-bold text-foreground">
-                {category.name}
-              </h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">
-                {category.description}
-              </p>
-              <span className="mt-4 inline-block text-sm font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                Explore listings →
-              </span>
-            </Link>
+                <div
+                  className={`grid size-12 place-items-center rounded-xl bg-gradient-to-br ${category.accent}`}
+                >
+                  <category.icon className="size-6" />
+                </div>
+                <h3 className="mt-5 text-base font-bold text-foreground">
+                  {category.name}
+                </h3>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  {category.description}
+                </p>
+                <span className="mt-4 inline-block text-sm font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                  Explore listings →
+                </span>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

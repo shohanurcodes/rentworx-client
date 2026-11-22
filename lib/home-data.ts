@@ -107,6 +107,14 @@ const fallbackReviews: CustomerReview[] = [
       "Great pricing and clear rental terms. Payment confirmation was quick and the support team answered my questions.",
     createdAt: "2026-10-05T00:00:00.000Z",
   },
+  {
+    id: "demo-review-4",
+    customerName: "Arif Rahman",
+    rating: 5,
+    comment:
+      "Booked a van for a weekend move. The listing matched the vehicle exactly and checkout took less than a minute.",
+    createdAt: "2026-09-28T00:00:00.000Z",
+  },
 ];
 
 export async function loadFeaturedEquipment(): Promise<FeaturedEquipment[]> {
@@ -123,7 +131,7 @@ export async function loadFeaturedEquipment(): Promise<FeaturedEquipment[]> {
 
 export async function loadCustomerReviews(): Promise<CustomerReview[]> {
   try {
-    const response = await api.get<CustomerReview[]>("/reviews?limit=3", {
+    const response = await api.get<CustomerReview[]>("/reviews?limit=4", {
       auth: false,
     });
     return response.data.length ? response.data : fallbackReviews;
