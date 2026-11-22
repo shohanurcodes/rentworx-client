@@ -2,22 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Heart,
-  ReceiptText,
-} from "lucide-react";
+import { ArrowRight, CheckCircle2, Heart, ReceiptText } from "lucide-react";
+import { toast } from "sonner";
 
+import { DataTable, type DataTableColumn } from "@/components/dashboard/DataTable";
+import { ProfilePanel } from "@/components/dashboard/ProfilePanel";
 import { StatCard } from "@/components/dashboard/StatCard";
-import { EquipmentCard } from "@/components/equipment/equipment-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { PageLoader } from "@/components/ui/page-loader";
 import { fetchMyBookings } from "@/lib/booking-api";
 import { fetchFavorites } from "@/lib/favorites-api";
 import type { BookingSummary, FeaturedEquipment } from "@/lib/types";
+import { useAuth } from "@/providers/AuthProvider";
+import { useFavorites } from "@/providers/FavoritesProvider";
 
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString(undefined, {
@@ -27,7 +25,13 @@ function formatDate(value: string) {
   });
 }
 
+function money(value: number) {
+  return `$${value.toLocaleString()}`;
+}
+
 export function CustomerDashboard() {
+  const { user } = useAuth();
+  const { toggleFavorite } = useFavorites();
   const [bookings, setBookings] = useState<BookingSummary[]>([]);
   const [favorites, setFavorites] = useState<FeaturedEquipment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,11 +60,111 @@ export function CustomerDashboard() {
     };
   }, []);
 
+  async function handleRemoveFavorite(id: string) {
+    try {
+      await toggleFavorite(id);
+      setFavorites((current) => current.filter((item) => item.id !== id));
+    } catch {
+      toast.error("Unable to remove this favorite");
+    }
+  }
+
   if (loading) {
     return <PageLoader label="Loading your rentals..." />;
   }
 
   const paidCount = bookings.filter((item) => item.paymentStatus === "paid").length;
+
+  const bookingColumns: DataTableColumn<BookingSummary>[] = [
+    {
+      key: "equipment",
+      label: "Equipment Name",
+      render: (booking) => (
+        <span className="font-semibold">{booking.equipmentInfo.name}</span>
+      ),
+    },
+    {
+      key: "start",
+      label: "Rental Start Date",
+      render: (booking) => formatDate(booking.startDate),
+    },
+    {
+      key: "end",
+      label: "Rental End Date",
+      render: (booking) => formatDate(booking.endDate),
+    },
+    {
+      key: "booked",
+      label: "Booking Date",
+      render: (booking) => formatDate(booking.bookingDate ?? booking.createdAt),
+    },
+    {
+      key: "total",
+      label: "Total Amount",
+      render: (booking) => (
+        <span className="font-semibold">{money(booking.totalAmount)}</span>
+      ),
+    },
+    {
+      key: "payment",
+      label: "Payment Status",
+      render: (booking) => (
+        <Badge
+          variant={booking.paymentStatus === "paid" ? "accent" : "secondary"}
+          className="capitalize"
+        >
+          {booking.paymentStatus}
+        </Badge>
+      ),
+    },
+    {
+      key: "booking",
+      label: "Booking Status",
+      render: (booking) => (
+        <Badge variant="outline" className="capitalize">
+          {booking.bookingStatus}
+        </Badge>
+      ),
+    },
+  ];
+
+  const favoriteColumns: DataTableColumn<FeaturedEquipment>[] = [
+    {
+      key: "equipment",
+      label: "Equipment",
+      render: (item) => (
+        <div>
+          <p className="font-semibold">{item.name}</p>
+          <p className="text-xs text-muted-foreground">{item.location}</p>
+        </div>
+      ),
+    },
+    { key: "category", label: "Category", render: (item) => item.category },
+    {
+      key: "price",
+      label: "Price",
+      render: (item) => `${money(item.price)} / ${item.rentalType}`,
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      render: (item) => (
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/equipment/${item.id}`}>View Details</Link>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-destructive"
+            onClick={() => handleRemoveFavorite(item.id)}
+          >
+            Remove Favorite
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="space-y-10">
@@ -88,9 +192,9 @@ export function CustomerDashboard() {
       <section>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold">Your recent rentals</h2>
+            <h2 className="text-xl font-bold">My rentals</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Track payment and booking status in one place.
+              Every booking with its payment and rental status.
             </p>
           </div>
           <Button asChild variant="outline" size="sm">
@@ -101,76 +205,29 @@ export function CustomerDashboard() {
           </Button>
         </div>
 
-        {bookings.length ? (
-          <div className="mt-5 space-y-3">
-            {bookings.slice(0, 5).map((booking) => (
-              <Card key={booking.id}>
-                <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5">
-                  <div>
-                    <p className="font-semibold">
-                      {booking.equipmentInfo.name}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {formatDate(booking.startDate)} –{" "}
-                      {formatDate(booking.endDate)} · {booking.duration}{" "}
-                      {booking.rentalType} period(s)
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant={
-                        booking.paymentStatus === "paid" ? "accent" : "secondary"
-                      }
-                    >
-                      {booking.paymentStatus}
-                    </Badge>
-                    <Badge variant="outline" className="capitalize">
-                      {booking.bookingStatus}
-                    </Badge>
-                    <Button asChild variant="ghost" size="sm">
-                      <Link
-                        href={`/payment/success?bookingId=${booking.id}`}
-                      >
-                        Details
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <Card className="mt-5">
-            <CardContent className="p-8 text-center">
-              <p className="text-sm text-muted-foreground">
-                You have not booked any equipment yet.
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        <DataTable
+          columns={bookingColumns}
+          rows={bookings}
+          rowKey={(booking) => booking.id}
+          empty="You have not booked any equipment yet."
+        />
       </section>
 
       <section>
-        <h2 className="text-xl font-bold">Saved equipment</h2>
+        <h2 className="text-xl font-bold">Favorites</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Quick access to the gear you favorited.
+          Equipment you saved for later, with quick actions.
         </p>
-        {favorites.length ? (
-          <div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {favorites.slice(0, 6).map((item) => (
-              <EquipmentCard key={item.id} item={item} />
-            ))}
-          </div>
-        ) : (
-          <Card className="mt-5">
-            <CardContent className="p-8 text-center">
-              <p className="text-sm text-muted-foreground">
-                Tap the heart on any listing to save it here.
-              </p>
-            </CardContent>
-          </Card>
-        )}
+
+        <DataTable
+          columns={favoriteColumns}
+          rows={favorites}
+          rowKey={(item) => item.id}
+          empty="Tap the heart on any listing to save it here."
+        />
       </section>
+
+      {user && <ProfilePanel user={user} />}
     </div>
   );
 }

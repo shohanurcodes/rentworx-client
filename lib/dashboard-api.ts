@@ -89,3 +89,21 @@ export function changeUserRole(id: string, role: UserRole) {
 export function setUserActive(id: string, isActive: boolean) {
   return api.patch<AuthUser>(`/users/${id}/manage`, { isActive });
 }
+
+export function deleteUser(id: string) {
+  return api.delete<{ id: string }>(`/users/${id}`);
+}
+
+// Profile (all roles)
+export function fetchMe() {
+  return api.get<AuthUser>("/auth/me");
+}
+
+export function updateProfile(input: {
+  name?: string;
+  phone?: string;
+  address?: string;
+  image?: string;
+}) {
+  return api.patch<AuthUser>("/users/me", input);
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import {
   CalendarCheck2,
   CircleDollarSign,
@@ -15,6 +16,11 @@ import { toast } from "sonner";
 
 import { refreshAccessToken } from "@/lib/auth-client";
 import { AnalyticsChart } from "@/components/dashboard/AnalyticsChart";
+import {
+  DataTable,
+  type DataTableColumn,
+} from "@/components/dashboard/DataTable";
+import { ProfilePanel } from "@/components/dashboard/ProfilePanel";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,6 +55,7 @@ import type {
   ManageEquipment,
   OwnerAnalytics,
 } from "@/lib/types";
+import { useAuth } from "@/providers/AuthProvider";
 
 const emptyForm: EquipmentPayload = {
   name: "",
@@ -75,6 +82,7 @@ function formatDate(value: string) {
 }
 
 export function OwnerDashboard() {
+  const { user } = useAuth();
   const [analytics, setAnalytics] = useState<OwnerAnalytics | null>(null);
   const [equipment, setEquipment] = useState<ManageEquipment[]>([]);
   const [bookings, setBookings] = useState<BookingSummary[]>([]);
@@ -234,6 +242,170 @@ export function OwnerDashboard() {
     }
   }
 
+  const equipmentColumns: DataTableColumn<ManageEquipment>[] = [
+    {
+      key: "name",
+      label: "Equipment Name",
+      render: (item) => (
+        <div>
+          <p className="font-semibold">{item.name}</p>
+          <p className="text-xs text-muted-foreground">{item.category}</p>
+        </div>
+      ),
+    },
+    { key: "category", label: "Category", render: (item) => item.category },
+    {
+      key: "price",
+      label: "Rental Price",
+      render: (item) => `$${item.price.toLocaleString()} / ${item.rentalType}`,
+    },
+    {
+      key: "quantity",
+      label: "Available Quantity",
+      render: (item) => `${item.availableQuantity ?? 0} / ${item.quantity}`,
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (item) => (
+        <Badge
+          variant={
+            item.status === "approved"
+              ? "accent"
+              : item.status === "pending"
+                ? "secondary"
+                : "destructive"
+          }
+          className="capitalize"
+        >
+          {item.status}
+        </Badge>
+      ),
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      render: (item) => (
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="ghost" size="sm">
+            <Link href={`/equipment/${item.id}`}>View</Link>
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => openEdit(item)}>
+            <Pencil />
+            Update
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-destructive"
+            onClick={() => handleDelete(item.id)}
+          >
+            <Trash2 />
+            Delete
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  const bookingColumns: DataTableColumn<BookingSummary>[] = [
+    {
+      key: "customer",
+      label: "Customer Information",
+      render: (booking) => (
+        <div>
+          <p className="font-semibold">{booking.customerInfo.name}</p>
+          <p className="text-xs text-muted-foreground">
+            {booking.customerInfo.email ?? "—"}
+          </p>
+        </div>
+      ),
+    },
+    {
+      key: "equipment",
+      label: "Equipment Information",
+      render: (booking) => booking.equipmentInfo.name,
+    },
+    {
+      key: "duration",
+      label: "Rental Duration",
+      render: (booking) => (
+        <div>
+          <p>
+            {formatDate(booking.startDate)} – {formatDate(booking.endDate)}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {booking.duration} {booking.rentalType} period(s)
+          </p>
+        </div>
+      ),
+    },
+    {
+      key: "quantity",
+      label: "Required Quantity",
+      render: (booking) => booking.requiredQuantity,
+    },
+    {
+      key: "amount",
+      label: "Booking Amount",
+      render: (booking) => `$${booking.totalAmount.toLocaleString()}`,
+    },
+    {
+      key: "payment",
+      label: "Payment Status",
+      render: (booking) => (
+        <Badge
+          variant={booking.paymentStatus === "paid" ? "accent" : "secondary"}
+          className="capitalize"
+        >
+          {booking.paymentStatus}
+        </Badge>
+      ),
+    },
+    {
+      key: "booking",
+      label: "Booking Status",
+      render: (booking) => (
+        <Badge variant="outline" className="capitalize">
+          {booking.bookingStatus}
+        </Badge>
+      ),
+    },
+    {
+      key: "actions",
+      label: "Actions",
+      render: (booking) =>
+        booking.bookingStatus === "completed" ||
+        booking.bookingStatus === "cancelled" ? (
+          <span className="text-xs text-muted-foreground">Finalized</span>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="sm"
+              onClick={() => handleBookingStatus(booking.id, "confirmed")}
+            >
+              Confirm
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleBookingStatus(booking.id, "completed")}
+            >
+              Complete
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-destructive"
+              onClick={() => handleBookingStatus(booking.id, "cancelled")}
+            >
+              Cancel
+            </Button>
+          </div>
+        ),
+    },
+  ];
+
   if (loading) {
     return <PageLoader label="Loading owner workspace..." />;
   }
@@ -304,63 +476,12 @@ export function OwnerDashboard() {
             </DialogTrigger>
           </div>
 
-          {equipment.length ? (
-            <div className="mt-5 grid gap-4">
-              {equipment.map((item) => (
-                <Card key={item.id}>
-                  <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-semibold">{item.name}</p>
-                        <Badge
-                          variant={
-                            item.status === "approved"
-                              ? "accent"
-                              : item.status === "pending"
-                                ? "secondary"
-                                : "destructive"
-                          }
-                          className="capitalize"
-                        >
-                          {item.status}
-                        </Badge>
-                      </div>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {item.category} · {item.location} · ${item.price}/
-                        {item.rentalType} · {item.availableQuantity ?? 0}/
-                        {item.quantity} available
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => openEdit(item)}
-                      >
-                        <Pencil />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-destructive"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        <Trash2 />
-                        Delete
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Card className="mt-5">
-              <CardContent className="p-8 text-center text-sm text-muted-foreground">
-                You have not listed any equipment yet.
-              </CardContent>
-            </Card>
-          )}
+          <DataTable
+            columns={equipmentColumns}
+            rows={equipment}
+            rowKey={(item) => item.id}
+            empty="You have not listed any equipment yet."
+          />
         </section>
 
         <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
@@ -585,77 +706,15 @@ export function OwnerDashboard() {
           Confirm, complete, or cancel rentals for your equipment.
         </p>
 
-        {bookings.length ? (
-          <div className="mt-5 space-y-3">
-            {bookings.map((booking) => (
-              <Card key={booking.id}>
-                <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5">
-                  <div>
-                    <p className="font-semibold">
-                      {booking.equipmentInfo.name}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {booking.customerInfo.name} · {formatDate(booking.startDate)}{" "}
-                      – {formatDate(booking.endDate)} · $
-                      {booking.totalAmount.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge
-                      variant={
-                        booking.paymentStatus === "paid" ? "accent" : "secondary"
-                      }
-                    >
-                      {booking.paymentStatus}
-                    </Badge>
-                    <Badge variant="outline" className="capitalize">
-                      {booking.bookingStatus}
-                    </Badge>
-                    {booking.bookingStatus !== "completed" &&
-                      booking.bookingStatus !== "cancelled" && (
-                        <>
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              handleBookingStatus(booking.id, "confirmed")
-                            }
-                          >
-                            Confirm
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              handleBookingStatus(booking.id, "completed")
-                            }
-                          >
-                            Complete
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-destructive"
-                            onClick={() =>
-                              handleBookingStatus(booking.id, "cancelled")
-                            }
-                          >
-                            Cancel
-                          </Button>
-                        </>
-                      )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <Card className="mt-5">
-            <CardContent className="p-8 text-center text-sm text-muted-foreground">
-              No rental requests yet.
-            </CardContent>
-          </Card>
-        )}
+        <DataTable
+          columns={bookingColumns}
+          rows={bookings}
+          rowKey={(booking) => booking.id}
+          empty="No rental requests yet."
+        />
       </section>
+
+      {user && <ProfilePanel user={user} />}
     </div>
   );
 }
