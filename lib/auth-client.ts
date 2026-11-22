@@ -29,14 +29,17 @@ export async function getJwtToken(): Promise<string> {
     token?: () => Promise<TokenResponse>;
   };
 
-  const methods = [client.token, client.getToken].filter(
-    (method): method is () => Promise<TokenResponse> => typeof method === "function",
-  );
+  const methodNames = ["token", "getToken"] as const;
 
   let lastResponse: TokenResponse = undefined;
 
-  for (const method of methods) {
-    const response = await method.call(client);
+  for (const name of methodNames) {
+    const method = client[name];
+
+    if (typeof method !== "function") continue;
+
+    // Keep the method bound to the BetterAuth proxy; detached calls return 404.
+    const response = await (client[name] as () => Promise<TokenResponse>)();
     lastResponse = response;
     const data = response?.data;
 
