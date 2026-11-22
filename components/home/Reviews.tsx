@@ -6,6 +6,7 @@ import { Quote, Star } from "lucide-react";
 
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { loadCustomerReviews } from "@/lib/home-data";
 import type { CustomerReview } from "@/lib/types";
 
@@ -37,13 +38,19 @@ export function Reviews() {
           description="Real feedback from renters who used RentWorx to find the right gear without the usual back-and-forth."
         />
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5 font-semibold text-amber-600 dark:text-amber-400">
+            <Star className="size-4 fill-current" />
+            4.9 average rating
+          </span>
+          <span className="size-1 rounded-full bg-border" />
+          <span>Verified renter stories</span>
+        </div>
+
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {loading
             ? Array.from({ length: 4 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="h-48 animate-pulse rounded-2xl border border-border bg-secondary"
-                />
+                <Skeleton key={index} className="h-64 rounded-2xl" />
               ))
             : reviews.map((review, index) => (
                 <motion.div
@@ -72,7 +79,7 @@ export function Reviews() {
                         “{review.comment}”
                       </p>
                       <div className="mt-6 flex items-center gap-3 border-t border-border pt-4">
-                        <div className="grid size-9 place-items-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                        <div className="grid size-9 place-items-center rounded-full bg-gradient-to-br from-amber-300 to-orange-500 text-sm font-bold text-[#251803]">
                           {review.customerName.charAt(0)}
                         </div>
                         <div>

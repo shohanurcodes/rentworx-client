@@ -17,6 +17,7 @@ export function SectionHeading({
   return (
     <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
       <div className="max-w-2xl">
+        <span className="mb-4 block h-1 w-12 rounded-full bg-gradient-to-r from-amber-500 to-orange-500" />
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">
           {eyebrow}
         </p>

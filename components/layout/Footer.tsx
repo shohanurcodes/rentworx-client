@@ -17,77 +17,83 @@ const categories = [
   "Agriculture Equipment",
 ];
 
+const footerLink =
+  "text-sm text-slate-400 transition-colors hover:text-amber-400";
+
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-card">
-      <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
-        <div>
-          <Logo />
-          <p className="mt-4 max-w-xs text-sm leading-6 text-muted-foreground">
-            A transparent marketplace for renting verified equipment from
-            trusted owners, with secure payments and flexible rental periods.
-          </p>
-        </div>
+    <footer className="relative overflow-hidden bg-midnight text-white">
+      <div className="hero-grid absolute inset-0 opacity-30" />
+      <div className="absolute -right-24 top-0 size-72 rounded-full bg-amber-500/10 blur-[100px]" />
 
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-            Platform
-          </h3>
-          <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
-            <li><Link className="hover:text-primary" href="/">Home</Link></li>
-            <li><Link className="hover:text-primary" href="/all-equipment">All Equipment</Link></li>
-            <li><Link className="hover:text-primary" href="/#how-it-works">How It Works</Link></li>
-            <li><Link className="hover:text-primary" href="/dashboard">Dashboard</Link></li>
-          </ul>
-        </div>
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div>
+            <Logo />
+            <p className="mt-5 max-w-xs text-sm leading-7 text-slate-400">
+              A transparent marketplace for renting verified equipment from
+              trusted owners, with secure payments and flexible rental periods.
+            </p>
+            <div className="mt-6 flex gap-2">
+              <a
+                href="https://x.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="RentWorx on X"
+                className="grid size-10 place-items-center rounded-xl border border-white/15 text-slate-300 transition-colors hover:border-amber-400/50 hover:bg-amber-400/10 hover:text-amber-400"
+              >
+                <XLogo />
+              </a>
+            </div>
+          </div>
 
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-            Categories
-          </h3>
-          <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
-            {categories.map((category) => (
-              <li key={category}>
-                <Link
-                  className="hover:text-primary"
-                  href={`/all-equipment?category=${encodeURIComponent(category)}`}
-                >
-                  {category}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div>
+            <h3 className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+              Platform
+            </h3>
+            <ul className="mt-5 space-y-3">
+              <li><Link className={footerLink} href="/">Home</Link></li>
+              <li><Link className={footerLink} href="/all-equipment">All Equipment</Link></li>
+              <li><Link className={footerLink} href="/#how-it-works">How It Works</Link></li>
+              <li><Link className={footerLink} href="/dashboard">Dashboard</Link></li>
+            </ul>
+          </div>
 
-        <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-            Stay connected
-          </h3>
-          <p className="mt-4 text-sm leading-6 text-muted-foreground">
-            Questions about a listing? Reach the RentWorx team any time.
-          </p>
-          <a
-            href="mailto:hello@rentworx.test"
-            className="mt-3 inline-block text-sm font-semibold text-primary hover:underline"
-          >
-            hello@rentworx.test
-          </a>
-          <div className="mt-5 flex gap-2">
+          <div>
+            <h3 className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+              Categories
+            </h3>
+            <ul className="mt-5 space-y-3">
+              {categories.map((category) => (
+                <li key={category}>
+                  <Link
+                    className={footerLink}
+                    href={`/all-equipment?category=${encodeURIComponent(category)}`}
+                  >
+                    {category}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-heading text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+              Stay connected
+            </h3>
+            <p className="mt-5 text-sm leading-7 text-slate-400">
+              Questions about a listing? Reach the RentWorx team any time.
+            </p>
             <a
-              href="https://x.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="RentWorx on X"
-              className="grid size-9 place-items-center rounded-lg border border-border text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+              href="mailto:hello@rentworx.test"
+              className="mt-3 inline-block text-sm font-semibold text-amber-400 hover:underline"
             >
-              <XLogo />
+              hello@rentworx.test
             </a>
           </div>
         </div>
-      </div>
 
-      <div className="border-t border-border">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div className="mt-14 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} RentWorx. All rights reserved.</p>
           <p>Built for owners, renters, and better workdays.</p>
         </div>

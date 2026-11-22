@@ -21,9 +21,10 @@ const benefits = [
 export function OwnerCta() {
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
-      <div className="relative overflow-hidden rounded-3xl bg-slate-950 px-6 py-12 text-white shadow-xl sm:px-10 lg:px-14 lg:py-16">
-        <div className="absolute -right-20 -top-24 size-80 rounded-full bg-primary/40 blur-3xl" />
-        <div className="absolute -bottom-24 -left-16 size-72 rounded-full bg-accent/20 blur-3xl" />
+      <div className="relative overflow-hidden rounded-[2rem] bg-midnight px-6 py-12 text-white shadow-[var(--ds-shadow-lift)] sm:px-10 lg:px-14 lg:py-16">
+        <div className="hero-grid absolute inset-0 opacity-50" />
+        <div className="absolute -right-20 -top-28 size-96 rounded-full bg-amber-500/20 blur-[100px]" />
+        <div className="absolute -bottom-28 -left-16 size-80 rounded-full bg-sky-500/15 blur-[110px]" />
 
         <div className="relative grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
           <div>
@@ -52,7 +53,7 @@ export function OwnerCta() {
                 key={benefit.label}
                 className="flex items-center gap-3 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10"
               >
-                <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/10 text-accent">
+                <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-amber-400/15 text-amber-400">
                   <benefit.icon className="size-5" />
                 </div>
                 <span className="text-sm font-medium">{benefit.label}</span>

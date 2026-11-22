@@ -90,8 +90,9 @@ export function Categories() {
             >
               <Link
                 href={`/all-equipment?category=${encodeURIComponent(category.name)}`}
-                className="group block h-full rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+                className="surface-card group relative block h-full overflow-hidden p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-[var(--ds-shadow-lift)]"
               >
+                <span className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-amber-500 to-orange-500 transition-transform duration-300 group-hover:scale-x-100" />
                 <div
                   className={`grid size-12 place-items-center rounded-xl bg-gradient-to-br ${category.accent}`}
                 >
@@ -103,7 +104,7 @@ export function Categories() {
                 <p className="mt-1.5 text-sm text-muted-foreground">
                   {category.description}
                 </p>
-                <span className="mt-4 inline-block text-sm font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="mt-4 inline-block text-sm font-semibold text-amber-600 opacity-60 transition-opacity group-hover:opacity-100 dark:text-amber-400">
                   Explore listings →
                 </span>
               </Link>

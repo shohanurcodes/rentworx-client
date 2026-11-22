@@ -33,14 +33,14 @@ export function HowItWorks() {
       />
 
       <div className="relative mt-12 grid gap-8 md:grid-cols-3">
-        <div className="absolute left-0 right-0 top-6 hidden h-px bg-border md:block" />
+        <div className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent md:block" />
 
         {steps.map((step, index) => (
           <div key={step.title} className="relative">
-            <div className="relative z-10 grid size-12 place-items-center rounded-2xl border border-border bg-card text-primary shadow-sm">
+            <div className="relative z-10 grid size-12 place-items-center rounded-2xl border border-amber-500/30 bg-card text-amber-600 shadow-[0_10px_24px_-12px_rgba(245,158,11,0.7)] dark:text-amber-400">
               <step.icon className="size-5" />
             </div>
-            <p className="mt-5 text-xs font-bold uppercase tracking-[0.25em] text-primary">
+            <p className="mt-5 text-xs font-bold uppercase tracking-[0.25em] text-amber-600 dark:text-amber-400">
               Step {index + 1}
             </p>
             <h3 className="mt-2 text-xl font-bold text-foreground">

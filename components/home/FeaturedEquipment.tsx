@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 import { EquipmentCard } from "@/components/equipment/equipment-card";
 import { SectionHeading } from "@/components/home/SectionHeading";
+import { Skeleton } from "@/components/ui/skeleton";
 import { loadFeaturedEquipment } from "@/lib/home-data";
 import type { FeaturedEquipment } from "@/lib/types";
 
@@ -40,10 +41,7 @@ export function FeaturedEquipment() {
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {loading
           ? Array.from({ length: 6 }).map((_, index) => (
-              <div
-                key={index}
-                className="h-[360px] animate-pulse rounded-2xl border border-border bg-secondary"
-              />
+              <Skeleton key={index} className="h-[360px] rounded-2xl" />
             ))
           : items.map((item, index) => (
               <motion.div

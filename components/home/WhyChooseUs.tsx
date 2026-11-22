@@ -52,13 +52,14 @@ export function WhyChooseUs() {
         {reasons.map((reason, index) => (
           <div
             key={reason.title}
-            className="rounded-2xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
+            className="surface-card group relative overflow-hidden p-6 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40"
           >
+            <span className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-amber-500 to-orange-500 transition-transform duration-300 group-hover:scale-x-100" />
             <div className="flex items-center justify-between">
-              <div className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
+              <div className="grid size-11 place-items-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
                 <reason.icon className="size-5" />
               </div>
-              <span className="text-xs font-bold tracking-[0.25em] text-muted-foreground/60">
+              <span className="font-heading text-xs font-bold tracking-[0.25em] text-muted-foreground/60">
                 {String(index + 1).padStart(2, "0")}
               </span>
             </div>
