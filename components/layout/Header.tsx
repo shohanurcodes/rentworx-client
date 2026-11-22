@@ -75,7 +75,7 @@ export function Header() {
                 href={item.href}
                 className={cn(
                   "rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
-                  active && "bg-secondary text-foreground",
+                  active && "bg-amber-500/10 text-amber-700 dark:text-amber-400",
                 )}
               >
                 {item.label}
@@ -91,7 +91,7 @@ export function Header() {
           ) : user ? (
             <>
               {user.role !== "customer" && (
-                <Badge variant="outline" className="hidden capitalize sm:inline-flex">
+                <Badge variant="warning" className="hidden capitalize sm:inline-flex">
                   {user.role}
                 </Badge>
               )}
@@ -116,7 +116,7 @@ export function Header() {
               <Button asChild variant="ghost" size="sm">
                 <Link href="/login">Login</Link>
               </Button>
-              <Button asChild size="sm">
+              <Button asChild size="sm" variant="accent">
                 <Link href="/register">Get Started</Link>
               </Button>
             </>
@@ -155,7 +155,7 @@ export function Header() {
             {!isLoading && user ? (
               <>
                 {user.role !== "customer" && (
-                  <Badge variant="outline" className="w-fit capitalize">
+                  <Badge variant="warning" className="w-fit capitalize">
                     {user.role}
                   </Badge>
                 )}
@@ -180,7 +180,7 @@ export function Header() {
                 <Button asChild variant="outline">
                   <Link href="/login">Login</Link>
                 </Button>
-                <Button asChild className="mt-2">
+                <Button asChild variant="accent" className="mt-2">
                   <Link href="/register">Get Started</Link>
                 </Button>
               </>

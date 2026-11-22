@@ -197,7 +197,7 @@ export function RegisterForm() {
           )}
         </div>
 
-        <Button type="submit" className="w-full" disabled={submitting}>
+        <Button type="submit" variant="accent" className="w-full" disabled={submitting}>
           {submitting ? "Creating account..." : "Create account"}
           {!submitting && <ArrowRight />}
         </Button>
@@ -205,7 +205,7 @@ export function RegisterForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link className="font-semibold text-primary hover:underline" href="/login">
+        <Link className="font-semibold text-amber-600 hover:underline dark:text-amber-400" href="/login">
           Sign in
         </Link>
       </p>

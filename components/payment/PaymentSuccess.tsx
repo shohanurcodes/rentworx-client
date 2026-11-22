@@ -145,7 +145,7 @@ export function PaymentSuccess() {
         <div
           className={`mx-auto grid size-16 place-items-center rounded-full ${
             paid
-              ? "bg-primary/10 text-primary"
+              ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
               : pending
                 ? "bg-accent/15 text-accent"
                 : "bg-destructive/10 text-destructive"
@@ -159,7 +159,7 @@ export function PaymentSuccess() {
             <XCircle className="size-8" />
           )}
         </div>
-        <h1 className="mt-5 text-3xl font-bold tracking-tight">
+        <h1 className="mt-5 font-heading text-3xl font-bold tracking-tight">
           {paid
             ? "Payment confirmed"
             : pending
@@ -179,7 +179,7 @@ export function PaymentSuccess() {
         <CardContent className="p-6 sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+              <p className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                 Booking reference
               </p>
               <p className="mt-1 font-mono text-sm">{booking.id}</p>
@@ -245,7 +245,7 @@ export function PaymentSuccess() {
               <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Total
               </dt>
-              <dd className="mt-1 text-lg font-bold text-primary">
+              <dd className="mt-1 font-heading text-lg font-bold text-amber-600 dark:text-amber-400">
                 ${booking.totalAmount.toLocaleString()}
               </dd>
             </div>
@@ -260,7 +260,7 @@ export function PaymentSuccess() {
           </dl>
 
           {paid && (
-            <p className="mt-7 flex items-start gap-2 rounded-xl bg-primary/10 p-4 text-sm leading-6 text-primary">
+            <p className="mt-7 flex items-start gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm leading-6 text-emerald-700 dark:text-emerald-300">
               <CreditCard className="mt-0.5 size-4 shrink-0" />
               Payment received. The owner has been notified and will coordinate
               handover with you.

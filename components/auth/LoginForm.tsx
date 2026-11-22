@@ -141,7 +141,7 @@ export function LoginForm() {
           )}
         </div>
 
-        <Button type="submit" className="w-full" disabled={submitting}>
+        <Button type="submit" variant="accent" className="w-full" disabled={submitting}>
           {submitting ? "Signing in..." : "Sign in"}
           {!submitting && <ArrowRight />}
         </Button>
@@ -149,7 +149,7 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         New to RentWorx?{" "}
-        <Link className="font-semibold text-primary hover:underline" href="/register">
+        <Link className="font-semibold text-amber-600 hover:underline dark:text-amber-400" href="/register">
           Create an account
         </Link>
       </p>
